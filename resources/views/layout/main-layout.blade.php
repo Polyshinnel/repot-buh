@@ -12,7 +12,7 @@
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/" class="nav-link">Главная</a>
+                <a href="/" class="nav-link">Дашборд</a>
             </li>
         </ul>
     </nav>
@@ -27,13 +27,17 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Fixed Layout</h1>
+                        <h1>@yield('page_title')</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a href="#">Layout</a></li>
-                            <li class="breadcrumb-item active">Fixed Layout</li>
+                            @foreach($breadcrumbs as $breadcrumb)
+                                @if($breadcrumb['active'])
+                                    <li class="breadcrumb-item active"><a href="{{$breadcrumb['link']}}">{{$breadcrumb['name']}}</a></li>
+                                @else
+                                    <li class="breadcrumb-item"><a href="{{$breadcrumb['link']}}">{{$breadcrumb['name']}}</a></li>
+                                @endif
+                            @endforeach
                         </ol>
                     </div>
                 </div>
@@ -49,7 +53,7 @@
                         <!-- Default box -->
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Title</h3>
+                                <h3 class="card-title">@yield('block_title')</h3>
                             </div>
                             <div class="card-body">
                                 @yield('content')

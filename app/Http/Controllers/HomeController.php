@@ -11,6 +11,13 @@ class HomeController extends Controller
     {
         $user = User::find(session('user_id'));
         $pageTitle = 'Дашборд';
-        return view('home', ['username' => $user->name, 'page_title' => $pageTitle]);
+        $breadcrumbs = [
+            [
+                'name' => 'Главная',
+                'link' => '/',
+                'active' => true
+            ]
+        ];
+        return view('home', ['username' => $user->name, 'page_title' => $pageTitle, 'breadcrumbs' => $breadcrumbs, 'block_title' => 'Активность']);
     }
 }

@@ -20,10 +20,37 @@
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="../widgets.html" class="nav-link active">
+                    <a href="/" class="nav-link active">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Дашборд
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="/payments" class="nav-link">
+                        <i class="nav-icon fas fa-credit-card"></i>
+                        <p>
+                            Платежи
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="/returning" class="nav-link">
+                        <i class="nav-icon fas fa-retweet"></i>
+                        <p>
+                            Возвраты
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="/settings" class="nav-link">
+                        <i class="nav-icon fas fa-cog"></i>
+                        <p>
+                            Настройки
                         </p>
                     </a>
                 </li>
