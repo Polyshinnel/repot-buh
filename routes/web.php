@@ -3,9 +3,12 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Payment\GetPayments;
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Returning\ReturningController;
+use App\Http\Controllers\Settings\CreateSettingsController;
 use App\Http\Controllers\Settings\SettingsController;
+use App\Http\Controllers\Settings\StoreSettingsController;
 use App\Http\Middleware\LoggedUser;
 use Illuminate\Support\Facades\Route;
 
@@ -27,5 +30,11 @@ Route::middleware([LoggedUser::class])->group(function () {
     Route::get('/', HomeController::class);
     Route::get('/payments', PaymentController::class);
     Route::get('/returning', ReturningController::class);
+
+
     Route::get('/settings', SettingsController::class);
+    Route::get('/settings/add', CreateSettingsController::class);
+    Route::post('/settings/create', StoreSettingsController::class);
+
+    Route::get('/payments/today-list', GetPayments::class);
 });
