@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Hash;
 
 class AddUser extends Command
 {
@@ -13,7 +14,7 @@ class AddUser extends Command
      *
      * @var string
      */
-    protected $signature = 'app:add-user';
+    protected $signature = 'manage-user:register {name : Имя пользователя} {email : Почта пользователя} {password : Пароль}';
 
     /**
      * The console command description.
