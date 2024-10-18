@@ -30,6 +30,7 @@ class HomeController extends Controller
         $paymentSum = 0;
 
         $formattedPayment = [];
+        $formattedPayment['items'] = [];
         if($paymentCount > 0) {
             foreach ($payments as $payment) {
                 $siteData = $payment->site_info;
