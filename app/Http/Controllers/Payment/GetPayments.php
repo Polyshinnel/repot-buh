@@ -27,7 +27,8 @@ class GetPayments extends Controller
 
                     if(isset($payments['items']) && count($payments['items']) > 0) {
                         foreach ($payments['items'] as $item) {
-                            if($item['status'] != 'canceled') {
+
+                            if($item['status'] == 'succeeded') {
                                 $dateStr = $item['created_at'];
                                 $timeSec = strtotime($dateStr);
                                 $timeSec += 180*60;

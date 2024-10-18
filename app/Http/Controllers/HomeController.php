@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Utils\TimeController;
 use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class HomeController extends Controller
         $filter = [
             ['payment_time', '>=', $selectDate]
         ];
-        $payments = Payment::where($filter)->get();
+        $payments = Payment::where($filter)->orderBy('payment_time', 'ASC')->get();
         $paymentCount = $payments->count();
         $paymentSum = 0;
 
@@ -48,6 +49,11 @@ class HomeController extends Controller
         $formattedPayment['payment_count'] = $paymentCount;
         $formattedPayment['payment_sum'] = $paymentSum;
 
+        $plotData = [];
+        if($formattedPayment['items']) {
+            $plotData = $this->getPlotData($formattedPayment['items']);
+        }
+
         return view(
             'home',
             [
@@ -57,8 +63,30 @@ class HomeController extends Controller
                 'block_title' => 'Активность',
                 'link' => '/',
                 'payments' => $formattedPayment,
-                'today' => date('d.m.Y')
+                'today' => date('d.m.Y'),
+                'plot_data' => $plotData
             ]
         );
+    }
+
+    /**
+     * @param array $payments
+     * @return array{data_payment: array, data_axis: array}
+     */
+    private function getPlotData(array $payments): array {
+        $sitesPayment = [];
+        $axisPayment = [];
+        $timeController = new TimeController();
+
+        foreach ($payments as $payment) {
+            $date = $timeController->reformatDateTime($payment['date']);
+            $axisPayment[] = $date['time'];
+            $sitesPayment[] = $payment['sum'];
+        }
+
+        return [
+            'data_payment' => $sitesPayment,
+            'data_axis' => $axisPayment
+        ];
     }
 }

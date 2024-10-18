@@ -9,7 +9,33 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="table-toolbar"></div>
+                    <div class="table-toolbar">
+                        <div class="filter-block d-flex justify-content-end">
+                            <button type="button" class="btn btn-outline-primary filter-btn">Фильтр</button>
+                        </div>
+
+                        <div class="filter-block-list justify-content-end mt-3 mb-5 d-none">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary month">Месяц</button>
+                                <button type="button" class="btn btn-outline-primary today ml-2">Сегодня</button>
+                                <button type="button" class="btn btn-outline-primary yesterday ml-2">Вчера</button>
+                                <button type="button" class="btn btn-outline-primary interval ml-2">Интервал</button>
+                            </div>
+                        </div>
+                        <div class="interval-block d-none">
+                            <div class="row justify-content-end align-items-center">
+                                <div class="form-group">
+                                    <label for="date_start">Дата начала</label>
+                                    <input type="text" class="form-control" id="date_start">
+                                </div>
+                                <div class="form-group ml-2">
+                                    <label for="date_end">Дата окончания</label>
+                                    <input type="text" class="form-control" id="date_end">
+                                </div>
+                                <button type="button" class="btn btn-primary interval-accept ml-2 mt-3">Применить</button>
+                            </div>
+                        </div>
+                    </div>
                     <table id="payment-table" class="table table-bordered table-striped">
                         <thead>
                         <tr>
@@ -109,5 +135,34 @@
         table.buttons().container().appendTo('#payment-table_wrapper .col-md-6:first');
         $('#payment-table_wrapper .col-md-6:first').addClass('d-flex align-items-center')
         $('#payment-table_wrapper .col-md-6:nth-child(2)').addClass('d-flex align-items-center justify-content-end')
+    </script>
+
+    <script>
+        /* Локализация datepicker */
+        $.datepicker.regional['ru'] = {
+            closeText: 'Закрыть',
+            prevText: 'Предыдущий',
+            nextText: 'Следующий',
+            currentText: 'Сегодня',
+            monthNames: ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+            monthNamesShort: ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'],
+            dayNames: ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'],
+            dayNamesShort: ['вск','пнд','втр','срд','чтв','птн','сбт'],
+            dayNamesMin: ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+            weekHeader: 'Не',
+            dateFormat: 'dd.mm.yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''
+        };
+        $.datepicker.setDefaults($.datepicker.regional['ru']);
+    </script>
+
+    <script>
+        $(function(){
+            $("#date_start").datepicker();
+            $("#date_end").datepicker();
+        });
     </script>
 @endsection

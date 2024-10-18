@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Utils\TimeController;
 use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -25,12 +26,92 @@ class PaymentController extends Controller
             ],
         ];
 
-        $dateStart = sprintf('%s-01 00:00:00', date('Y-m'));
-        $dateEnd = sprintf('%s 23:59:59', date('Y-m-t'));
+        $dateInfo = 'month';
+        if($request->query('date_info')) {
+            $dateInfo = $request->query('date_info');
+        }
 
-        $blockTitle = sprintf('Платежи с 01.%s по %s', date('m.Y'), date('t.m.Y'));
+        $blockTitle = '';
 
-        $payments = Payment::whereBetween('payment_time', [$dateStart, $dateEnd])->orderBy('payment_time', 'DESC')->get();
+        //Фильтр сегодня
+        if($dateInfo == 'today') {
+            $date = date('Y-m-d');
+            $selectDate = $date.' '.'00:00:00';
+            $filter = [
+                ['payment_time', '>=', $selectDate]
+            ];
+            $payments = Payment::where($filter)->orderBy('payment_time', 'DESC')->get();
+            $blockTitle = 'Платежи за сегодня';
+        }
+
+        //Фильтр вчера
+        if($dateInfo == 'yesterday') {
+            $date = date('Y-m-d');
+            $selectDate = $date.' '.'00:00:00';
+            $selectedDateSec = strtotime($selectDate);
+            $yesterday = $selectedDateSec - (24 * 3600);
+            $yesterdayDate = date('Y-m-d', $selectedDateSec);
+            $yesterdayDateStart = sprintf('%s 00:00:00', $yesterdayDate);
+            $yesterdayDateEnd = sprintf('%s 23:59:59', $yesterdayDate);
+
+            $payments = Payment::whereBetween('payment_time', [$yesterdayDateStart, $yesterdayDateEnd])->orderBy('payment_time', 'DESC')->get();
+            $blockTitle = 'Платежи за вчера';
+        }
+
+        if($dateInfo == 'interval') {
+            $timeController = new TimeController();
+            $blockTitle = 'Платежи ';
+            $dateStart = '';
+            if($request->query('date_start')) {
+                $dateStart = $request->query('date_start');
+                $dateStart = $timeController->reformatDate($dateStart, 'en');
+                $dateStart = sprintf('%s 00:00:00', $dateStart);
+            }
+
+            $dateEnd = '';
+            if($request->query('date_end')) {
+                $dateEnd = $request->query('date_end');
+                $dateEnd = $timeController->reformatDate($dateEnd, 'en');
+                $dateEnd = sprintf('%s 23:59:59', $dateEnd);
+            }
+
+            //Если пуста дата начала
+            if($dateStart == '' && $dateEnd != '') {
+                $filter = [
+                    ['payment_time', '<=', $dateEnd]
+                ];
+                $payments = Payment::where($filter)->orderBy('payment_time', 'DESC')->get();
+                $blockTitle .= 'по '. $dateEnd;
+            }
+
+            //Если пуста дата конца
+            if($dateStart != '' && $dateEnd == '') {
+                $filter = [
+                    ['payment_time', '>=', $dateStart]
+                ];
+                $payments = Payment::where($filter)->orderBy('payment_time', 'DESC')->get();
+                $blockTitle .= 'c '. $dateStart;
+            }
+
+            //Если получен интервал
+            if($dateStart != '' && $dateEnd != '') {
+                $payments = Payment::whereBetween('payment_time', [$dateStart, $dateEnd])->orderBy('payment_time', 'DESC')->get();
+                $blockTitle .= 'c '. $dateStart.' по '.$dateEnd;
+            }
+        }
+
+        //Фильтр по умолчанию
+        if($dateInfo == 'month') {
+            $dateStart = sprintf('%s-01 00:00:00', date('Y-m'));
+            $dateEnd = sprintf('%s 23:59:59', date('Y-m-t'));
+
+            $payments = Payment::whereBetween('payment_time', [$dateStart, $dateEnd])->orderBy('payment_time', 'DESC')->get();
+            $blockTitle = sprintf('Платежи с 01.%s по %s', date('m.Y'), date('t.m.Y'));
+        }
+
+
+
+
         $formattedPayments = [];
 
         if(!$payments->isEmpty()) {

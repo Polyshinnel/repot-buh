@@ -144,5 +144,116 @@
     </div>
     <!-- /.row -->
 
+    @if($plot_data)
+        <ul id="payment_axis" class="d-none">
+            @foreach($plot_data['data_axis'] as $axis)
+                <li>{{$axis}}</li>
+            @endforeach
+        </ul>
 
+        <ul id="payment_value" class="d-none">
+            @foreach($plot_data['data_payment'] as $data)
+                <li>{{$data}}</li>
+            @endforeach
+        </ul>
+    @endif
+
+
+    <script src="/assets/plugins/chart.js/Chart.min.js"></script>
+    <script>
+        function getPaymentAxis() {
+            let axisArr = [];
+            if($('#payment_axis').length > 0) {
+                $('#payment_axis li').each(function () {
+                    axisArr.push($(this).html())
+                })
+            }
+
+            return axisArr;
+        }
+
+        function getPaymentData() {
+            let dataArr = [];
+            if($('#payment_value').length > 0) {
+                $('#payment_value li').each(function () {
+                    dataArr.push(parseFloat($(this).html()))
+                })
+            }
+
+            return dataArr
+        }
+
+        $(function () {
+            'use strict'
+            let $visitorsChart = $('#payment-chart')
+            let mode = 'index'
+            let intersect = true
+            let ticksStyle = {
+                fontColor: '#495057',
+                fontStyle: 'bold'
+            }
+
+
+            let paymentLabels = getPaymentAxis();
+            let paymentData = getPaymentData();
+            console.log(paymentLabels)
+            console.log(paymentData)
+            let dataList = {
+                labels: paymentLabels,
+                    datasets: [
+                    {
+                        type: 'line',
+                        data: paymentData,
+                        backgroundColor: 'transparent',
+                        borderColor: '#007bff',
+                        pointBorderColor: '#007bff',
+                        pointBackgroundColor: '#007bff',
+                        fill: false
+                        // pointHoverBackgroundColor: '#007bff',
+                        // pointHoverBorderColor    : '#007bff'
+                    },
+                ]
+            }
+
+            let visitorsChart = new Chart($visitorsChart, {
+                data: dataList,
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    hover: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            // display: false,
+                            gridLines: {
+                                display: true,
+                                lineWidth: '4px',
+                                color: 'rgba(0, 0, 0, .2)',
+                                zeroLineColor: 'transparent'
+                            },
+                            ticks: $.extend({
+                                beginAtZero: true,
+                                suggestedMax: 200
+                            }, ticksStyle)
+                        }],
+                        xAxes: [{
+                            display: true,
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: ticksStyle
+                        }]
+                    }
+                }
+            })
+        })
+    </script>
 @endsection
