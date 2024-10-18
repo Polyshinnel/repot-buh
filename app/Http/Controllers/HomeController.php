@@ -55,7 +55,8 @@ class HomeController extends Controller
                 'breadcrumbs' => $breadcrumbs,
                 'block_title' => 'Активность',
                 'link' => '/',
-                'payments' => $formattedPayment
+                'payments' => $formattedPayment,
+                'today' => date('d.m.Y')
             ]
         );
     }

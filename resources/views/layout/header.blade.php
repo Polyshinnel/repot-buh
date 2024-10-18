@@ -22,4 +22,5 @@
     <script src="/assets/js/adminlte.min.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="/assets/js/demo.js"></script>
+    <script src="/assets/js/custom.js"></script>
 </head>

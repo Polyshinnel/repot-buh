@@ -18,6 +18,7 @@ return new class extends Migration
             $table->dateTime('payment_time');
             $table->string('order_id');
             $table->string('payment_order_id');
+            $table->string('commission');
             $table->timestamps();
 
             $table->index('site_id', 'payments_site_id_idx');

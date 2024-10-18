@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-header border-0">
                     <div class="d-flex justify-content-between">
-                        <h3 class="card-title">Платежи за 01.10.2024 - 30.10.2024</h3>
+                        <h3 class="card-title">Платежи за {{$today}}</h3>
                         <a href="/payments">Полный список</a>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
             <div class="card">
                 <div class="card-header border-0">
                     <div class="d-flex justify-content-between">
-                        <h3 class="card-title">Возвраты за 01.10.2024 - 30.10.2024</h3>
+                        <h3 class="card-title">Возвраты за {{$today}}</h3>
                         <a href="/returning">Полный список</a>
                     </div>
                 </div>

@@ -1,24 +1,45 @@
 <?php
 
-namespace App\Http\Controllers\Payment;
+namespace App\Console\Commands;
 
-use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\Setting;
-use Illuminate\Http\Request;
+use Illuminate\Console\Command;
 
-class GetPayments extends Controller
+class GetTodayPayments extends Command
 {
-    public function __invoke()
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'app:get-today-payments';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Запрашивает все платежи за сегодня';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
     {
         $settings = Setting::all();
         if(!$settings->isEmpty()) {
+            $limit = 100;
+            $baseLink = sprintf(
+                'https://api.yookassa.ru/v3/payments?limit=100&created_at.gte=%sT00:00:00.000Z',
+                date('Y-m-d')
+            );
+
+
             foreach ($settings as $setting) {
                 $shopId = $setting->shop_id;
                 $apiKey = $setting->api_key;
-                $baseLink = 'https://api.yookassa.ru/v3/payments?limit=100&created_at.gte=2024-10-01T00:00:00.139Z';
                 $link = $baseLink;
-
 
                 $normalizePayments = [];
                 $cursorFlag = true;
@@ -69,9 +90,7 @@ class GetPayments extends Controller
                 }
             }
         }
-
-        return response()->json(['message' => 'scan is ok']);
-
+        return 'Данные получены';
     }
 
     private function getTodayPayments($shopId, $apiKey, $link): array {
