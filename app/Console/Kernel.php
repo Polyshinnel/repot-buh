@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\ScheduledJobs\GetHourlyPayment;
+use App\ScheduledJobs\GetHourlyReturning;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,6 +16,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->call(new GetHourlyPayment)->everyThirtyMinutes();
+        $schedule->call(new GetHourlyReturning)->everyTwoHours();
     }
 
     /**

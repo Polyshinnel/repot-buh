@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Payment;
+namespace App\Http\Controllers\Returning;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Models\Returning;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 
-class GetPayments extends Controller
+class GetReturning extends Controller
 {
     public function __invoke()
     {
@@ -16,44 +17,41 @@ class GetPayments extends Controller
             foreach ($settings as $setting) {
                 $shopId = $setting->shop_id;
                 $apiKey = $setting->api_key;
-                $baseLink = 'https://api.yookassa.ru/v3/payments?limit=100&created_at.gte=2024-09-01T00:00:00.139Z';
+                $baseLink = 'https://api.yookassa.ru/v3/refunds?limit=100&created_at.gte=2024-09-01T00:00:00.139Z';
                 $link = $baseLink;
 
 
                 $normalizePayments = [];
                 $cursorFlag = true;
                 while ($cursorFlag) {
-                    $payments = $this->getTodayPayments($shopId, $apiKey, $link);
+                    $returnings = $this->getTodayReturning($shopId, $apiKey, $link);
+                    if(isset($returnings['items']) && count($returnings['items']) > 0) {
+                        foreach ($returnings['items'] as $item) {
 
-                    if(isset($payments['items']) && count($payments['items']) > 0) {
-                        foreach ($payments['items'] as $item) {
+                            $dateStr = $item['created_at'];
+                            $timeSec = strtotime($dateStr);
+                            $timeSec += 180*60;
+                            $date = date('Y-m-d H:i:s', $timeSec);
+                            $totalSum = (float)$item['amount']['value'];
 
-                            if($item['status'] == 'succeeded') {
-                                $dateStr = $item['created_at'];
-                                $timeSec = strtotime($dateStr);
-                                $timeSec += 180*60;
-                                $date = date('Y-m-d H:i:s', $timeSec);
-                                $totalSum = (float)$item['amount']['value'];
-                                $incomeSum = (float)$item['income_amount']['value'];
-                                $commission = $totalSum - $incomeSum;
+                            $paymentId = $item['payment_id'];
+                            $payment = Payment::where(['payment_order_id' => $paymentId])->first();
 
-
+                            if($payment) {
                                 $normalizePayments[] = [
                                     'site_id' => $setting->site_id,
                                     'payment_sum' => $item['amount']['value'],
                                     'payment_time' => $date,
-                                    'order_id' => $item['description'],
-                                    'payment_order_id' => $item['id'],
-                                    'commission' => $commission
+                                    'order_id' => $payment->order_id,
+                                    'payment_order_id' => $paymentId,
                                 ];
                             }
-
                         }
                     }
 
 
-                    if(isset($payments['next_cursor'])) {
-                        $link = $baseLink.'&cursor='.$payments['next_cursor'];
+                    if(isset($returnings['next_cursor'])) {
+                        $link = $baseLink.'&cursor='.$returnings['next_cursor'];
                     } else {
                         $cursorFlag = false;
                     }
@@ -61,10 +59,10 @@ class GetPayments extends Controller
 
 
                 if($normalizePayments) {
-                    foreach ($normalizePayments as $payment) {
-                        $checkPay = Payment::where(['payment_order_id' => $payment['payment_order_id']])->first();
+                    foreach ($normalizePayments as $returning) {
+                        $checkPay = Returning::where(['payment_order_id' => $returning['payment_order_id']])->first();
                         if(!$checkPay) {
-                            Payment::create($payment);
+                            Returning::create($returning);
                         }
                     }
                 }
@@ -75,7 +73,7 @@ class GetPayments extends Controller
 
     }
 
-    private function getTodayPayments($shopId, $apiKey, $link): array {
+    private function getTodayReturning($shopId, $apiKey, $link): array {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $link);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

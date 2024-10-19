@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Payment\GetPayments;
 use App\Http\Controllers\Payment\PaymentController;
+use App\Http\Controllers\Returning\GetReturning;
 use App\Http\Controllers\Returning\ReturningController;
 use App\Http\Controllers\Settings\CreateSettingsController;
 use App\Http\Controllers\Settings\SettingsController;
@@ -37,4 +38,5 @@ Route::middleware([LoggedUser::class])->group(function () {
     Route::post('/settings/create', StoreSettingsController::class);
 
     Route::get('/payments/today-list', GetPayments::class);
+    Route::get('/returning/today-list', GetReturning::class);
 });
