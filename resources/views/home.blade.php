@@ -83,12 +83,12 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <p class="d-flex flex-column">
-                            <span class="text-bold text-lg">3</span>
+                            <span class="text-bold text-lg">0</span>
                             <span>Количество возвратов</span>
                         </p>
 
                         <p class="d-flex flex-column">
-                            <span class="text-bold text-lg">7000</span>
+                            <span class="text-bold text-lg">0</span>
                             <span>Сумма платежей</span>
                         </p>
                     </div>
@@ -122,18 +122,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                pay.kidsberry.web
-                            </td>
-                            <td>525 ₽</td>
-                            <td>
-                                01.10.2024 10:30:31
-                            </td>
-                            <td>
-                                Заказ beauty-Fuv5aaM57Lnw20112024200021306744
-                            </td>
-                        </tr>
+
                         </tbody>
                     </table>
                 </div>
