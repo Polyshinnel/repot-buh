@@ -35,19 +35,22 @@ class GetHourlyPayment
                                 $timeSec = strtotime($dateStr);
                                 $timeSec += 180*60;
                                 $date = date('Y-m-d H:i:s', $timeSec);
-                                $totalSum = (float)$item['amount']['value'];
-                                $incomeSum = (float)$item['income_amount']['value'];
-                                $commission = $totalSum - $incomeSum;
+                                if(isset($item['income_amount']['value'])) {
+                                    $totalSum = (float)$item['amount']['value'];
+                                    $incomeSum = (float)$item['income_amount']['value'];
+                                    $commission = $totalSum - $incomeSum;
 
 
-                                $normalizePayments[] = [
-                                    'site_id' => $setting->site_id,
-                                    'payment_sum' => $item['amount']['value'],
-                                    'payment_time' => $date,
-                                    'order_id' => $item['description'],
-                                    'payment_order_id' => $item['id'],
-                                    'commission' => $commission
-                                ];
+                                    $normalizePayments[] = [
+                                        'site_id' => $setting->site_id,
+                                        'payment_sum' => $item['amount']['value'],
+                                        'payment_time' => $date,
+                                        'order_id' => $item['description'],
+                                        'payment_order_id' => $item['id'],
+                                        'commission' => $commission
+                                    ];
+                                }
+
                             }
 
                         }
