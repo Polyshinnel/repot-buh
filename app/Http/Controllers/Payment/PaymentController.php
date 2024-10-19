@@ -11,8 +11,10 @@ use Illuminate\Http\Request;
 class PaymentController extends Controller
 {
     public function __invoke(Request $request) {
+        date_default_timezone_set('Europe/Moscow');
         $user = User::find(session('user_id'));
         $pageTitle = 'Сводка платежей';
+
         $breadcrumbs = [
             [
                 'name' => 'Главная',
@@ -50,7 +52,7 @@ class PaymentController extends Controller
             $selectDate = $date.' '.'00:00:00';
             $selectedDateSec = strtotime($selectDate);
             $yesterday = $selectedDateSec - (24 * 3600);
-            $yesterdayDate = date('Y-m-d', $selectedDateSec);
+            $yesterdayDate = date('Y-m-d', $yesterday);
             $yesterdayDateStart = sprintf('%s 00:00:00', $yesterdayDate);
             $yesterdayDateEnd = sprintf('%s 23:59:59', $yesterdayDate);
 

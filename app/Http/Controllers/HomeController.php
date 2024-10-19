@@ -11,6 +11,7 @@ class HomeController extends Controller
 {
     public function __invoke()
     {
+        date_default_timezone_set('Europe/Moscow');
         $user = User::find(session('user_id'));
         $pageTitle = 'Дашборд';
         $breadcrumbs = [
