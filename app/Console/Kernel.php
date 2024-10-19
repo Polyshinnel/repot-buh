@@ -6,6 +6,7 @@ use App\ScheduledJobs\GetHourlyPayment;
 use App\ScheduledJobs\GetHourlyReturning;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -15,7 +16,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->call(new GetHourlyPayment)->everyThirtyMinutes();
+        $schedule->call(new GetHourlyPayment)
+            ->everyThirtyMinutes()
+            ->before(function () {
+                Log::info('Задача началась');
+            });
         $schedule->call(new GetHourlyReturning)->everyTwoHours();
     }
 
