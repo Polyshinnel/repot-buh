@@ -35,20 +35,22 @@ class GetHourlyReturning
                             $timeSec = strtotime($dateStr);
                             $timeSec += 180*60;
                             $date = date('Y-m-d H:i:s', $timeSec);
-                            $totalSum = (float)$item['amount']['value'];
 
-                            $paymentId = $item['payment_id'];
-                            $payment = Payment::where(['payment_order_id' => $paymentId])->first();
+                            if(isset($item['payment_id'])) {
+                                $paymentId = $item['payment_id'];
+                                $payment = Payment::where(['payment_order_id' => $paymentId])->first();
 
-                            if($payment) {
-                                $normalizePayments[] = [
-                                    'site_id' => $setting->site_id,
-                                    'payment_sum' => $item['amount']['value'],
-                                    'payment_time' => $date,
-                                    'order_id' => $payment->order_id,
-                                    'payment_order_id' => $paymentId,
-                                ];
+                                if($payment) {
+                                    $normalizePayments[] = [
+                                        'site_id' => $setting->site_id,
+                                        'payment_sum' => $item['amount']['value'],
+                                        'payment_time' => $date,
+                                        'order_id' => $payment->order_id,
+                                        'payment_order_id' => $paymentId,
+                                    ];
+                                }
                             }
+
                         }
                     }
 
