@@ -50,7 +50,6 @@ class GetHourlyPayment
                                         'commission' => $commission
                                     ];
                                 }
-
                             }
 
                         }
