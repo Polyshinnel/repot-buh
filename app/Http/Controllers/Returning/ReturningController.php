@@ -115,8 +115,11 @@ class ReturningController extends Controller
 
 
         $formattedReturnings = [];
+        $returningCount = 0;
+        $returningSum = 0;
 
         if(!$returnings->isEmpty()) {
+            $timeController = new TimeController();
             foreach ($returnings as $returning) {
                 $siteInfo = $returning->site_info;
                 $orderId = $returning->order_id;
@@ -128,9 +131,14 @@ class ReturningController extends Controller
                     $link = sprintf('%s/panel/?module=OrderAdmin&id=%s', $siteInfo->site_addr, $orderNum);
                 }
 
+                $returningCount++;
+                $returningSum += $returning->payment_sum;
+                $returningDate = $timeController->reformatDateTime($returning->payment_time);
+
+
                 $formattedReturnings[] = [
-                    'payment_date' => $returning->payment_time,
-                    'payment_sum' => $returning->payment_sum,
+                    'payment_date' => $returningDate['formatted_date'],
+                    'payment_sum' => number_format($returning->payment_sum, 2, '.', ' '),
                     'site' => $siteInfo->site_addr,
                     'order_id' => $returning->order_id,
                     'payment_id' => $returning->payment_order_id,
@@ -148,7 +156,9 @@ class ReturningController extends Controller
                 'breadcrumbs' => $breadcrumbs,
                 'block_title' => $blockTitle,
                 'link' => '/returning',
-                'returnings' => $formattedReturnings
+                'returnings' => $formattedReturnings,
+                'returning_count' => $returningCount,
+                'returning_sum' => number_format($returningSum, 2, '.', ' ')
             ]
         );
     }

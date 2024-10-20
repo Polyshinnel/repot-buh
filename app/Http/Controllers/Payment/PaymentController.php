@@ -115,22 +115,29 @@ class PaymentController extends Controller
 
 
         $formattedPayments = [];
+        $paymentCount = 0;
+        $paymentSum = 0;
 
         if(!$payments->isEmpty()) {
+            $timeController = new TimeController();
             foreach ($payments as $payment) {
                 $siteInfo = $payment->site_info;
                 $orderId = $payment->order_id;
                 $orderArr = explode(' ', $orderId);
                 $orderName = $orderArr[1];
                 $link = 'Пусто';
+                $paymentCount++;
+                $paymentSum += $payment->payment_sum;
                 if(!str_contains($orderName, 'beauty')) {
                     $orderNum = preg_replace('/[^0-9]/', '', $orderName);
                     $link = sprintf('%s/panel/?module=OrderAdmin&id=%s', $siteInfo->site_addr, $orderNum);
                 }
 
+                $paymentDate = $timeController->reformatDateTime($payment->payment_time);
+
                 $formattedPayments[] = [
-                    'payment_date' => $payment->payment_time,
-                    'payment_sum' => $payment->payment_sum,
+                    'payment_date' => $paymentDate['formatted_date'],
+                    'payment_sum' => number_format($payment->payment_sum, 2, '.', ' '). '₽',
                     'site' => $siteInfo->site_addr,
                     'order_id' => $payment->order_id,
                     'payment_id' => $payment->payment_order_id,
@@ -147,7 +154,9 @@ class PaymentController extends Controller
                 'breadcrumbs' => $breadcrumbs,
                 'block_title' => $blockTitle,
                 'link' => '/payments',
-                'payments' => $formattedPayments
+                'payments' => $formattedPayments,
+                'payment_count' => $paymentCount,
+                'payment_sum' => number_format($paymentSum, 2, '.', ' ')
             ]
         );
     }

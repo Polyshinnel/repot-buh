@@ -10,9 +10,30 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-toolbar">
-                        <div class="filter-block d-flex justify-content-end">
-                            <button type="button" class="btn btn-outline-primary filter-btn">Фильтр</button>
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="payment-count__wrapper d-flex align-items-start">
+                                    <p class="d-flex flex-column">
+                                        <span class="text-bold text-lg">{{$payment_sum}} ₽</span>
+                                        <span>Сумма платежей</span>
+                                    </p>
+
+                                    <p class="d-flex flex-column ml-5">
+                                        <span class="text-bold text-lg">{{$payment_count}}</span>
+                                        <span>Количество платежей</span>
+                                    </p>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="filter-block d-flex justify-content-end">
+                                    <button type="button" class="btn btn-outline-primary filter-btn">Фильтр</button>
+                                </div>
+                            </div>
                         </div>
+
 
                         <div class="filter-block-list justify-content-end mt-3 mb-5 d-none">
                             <div class="row">
