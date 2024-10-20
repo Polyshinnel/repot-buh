@@ -60,10 +60,13 @@ class HomeController extends Controller
                     $link = sprintf('%s/panel/?module=OrderAdmin&id=%s', $siteData->site_addr, $orderNum);
                 }
 
+                $datePayment = $timeController->reformatDateTime($payment->payment_time);
+
+
                 $formattedPayment['items'][] = [
                     'site' => $siteAddr,
                     'sum' => number_format($payment->payment_sum, 2, '.', ' '),
-                    'date' => $payment->payment_time,
+                    'date' => $datePayment['formatted_date'],
                     'order_id' => $payment->order_id,
                     'link' => $link
                 ];
@@ -155,8 +158,8 @@ class HomeController extends Controller
         $timeController = new TimeController();
 
         foreach ($payments as $payment) {
-            $date = $timeController->reformatDateTime($payment['date']);
-            $axisPayment[] = $date['time'];
+            $dateArr = explode(' ', $payment['date']);
+            $axisPayment[] = $dateArr[1];
             $sitesPayment[] = $payment['sum'];
         }
 
