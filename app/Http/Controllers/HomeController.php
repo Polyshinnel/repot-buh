@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Utils\TimeController;
 use App\Models\Payment;
+use App\Models\Returning;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -22,6 +23,7 @@ class HomeController extends Controller
             ]
         ];
 
+        //Платежи за сегодня
         $date = date('Y-m-d');
         $selectDate = $date.' '.'00:00:00';
         $filter = [
@@ -31,21 +33,53 @@ class HomeController extends Controller
         $paymentCount = $payments->count();
         $paymentSum = 0;
 
+        //Платежи за вчера
+        $selectedDateSec = strtotime($selectDate);
+        $yesterday = $selectedDateSec - (24 * 3600);
+        $yesterdayDate = date('Y-m-d', $yesterday);
+        $yesterdayDateStart = sprintf('%s 00:00:00', $yesterdayDate);
+        $yesterdayDateEnd = sprintf('%s 23:59:59', $yesterdayDate);
+
+        $yesterday_payments = Payment::whereBetween('payment_time', [$yesterdayDateStart, $yesterdayDateEnd])->orderBy('payment_time', 'DESC')->get();
+
         $formattedPayment = [];
         $formattedPayment['items'] = [];
         if($paymentCount > 0) {
+            $timeController = new TimeController();
             foreach ($payments as $payment) {
                 $siteData = $payment->site_info;
                 $siteAddr = $siteData->site_addr;
                 $paymentSum += (float)$payment->payment_sum;
+
+                $orderId = $payment->order_id;
+                $orderArr = explode(' ', $orderId);
+                $orderName = $orderArr[1];
+                $link = 'Пусто';
+                if(!str_contains($orderName, 'beauty')) {
+                    $orderNum = preg_replace('/[^0-9]/', '', $orderName);
+                    $link = sprintf('%s/panel/?module=OrderAdmin&id=%s', $siteData->site_addr, $orderNum);
+                }
+
                 $formattedPayment['items'][] = [
                     'site' => $siteAddr,
-                    'sum' => $payment->payment_sum,
+                    'sum' => number_format($payment->payment_sum, 2, '.', ' '),
                     'date' => $payment->payment_time,
-                    'order_id' => $payment->order_id
+                    'order_id' => $payment->order_id,
+                    'link' => $link
                 ];
             }
         }
+
+        $yesterdaySum = 0;
+
+        if(!$yesterday_payments->isEmpty()) {
+            foreach ($yesterday_payments as $payment) {
+                $yesterdaySum += $payment->payment_sum;
+            }
+        }
+
+        $paymentPercent = (($paymentSum - $yesterdaySum) / $paymentSum) * 100;
+        $paymentPercent = number_format($paymentPercent, 1, '.', ' ');
 
         $formattedPayment['payment_count'] = $paymentCount;
         $formattedPayment['payment_sum'] = $paymentSum;
@@ -53,6 +87,45 @@ class HomeController extends Controller
         $plotData = [];
         if($formattedPayment['items']) {
             $plotData = $this->getPlotData($formattedPayment['items']);
+        }
+
+        $dateStart = sprintf('%s-01 00:00:00', date('Y-m'));
+        $dateEnd = sprintf('%s 23:59:59', date('Y-m-t'));
+
+        $returnings = Returning::whereBetween('payment_time', [$dateStart, $dateEnd])->orderBy('payment_time', 'DESC')->get();
+        $blockTitle = sprintf('Возвраты с 01.%s по %s', date('m.Y'), date('t.m.Y'));
+
+        $formattedReturnings = [];
+        $returningCount = 0;
+        $returningSum = 0;
+
+        if(!$returnings->isEmpty()) {
+            $timeController = new TimeController();
+            foreach ($returnings as $returning) {
+                $siteInfo = $returning->site_info;
+                $orderId = $returning->order_id;
+                $orderArr = explode(' ', $orderId);
+                $orderName = $orderArr[1];
+                $link = 'Пусто';
+                if(!str_contains($orderName, 'beauty')) {
+                    $orderNum = preg_replace('/[^0-9]/', '', $orderName);
+                    $link = sprintf('%s/panel/?module=OrderAdmin&id=%s', $siteInfo->site_addr, $orderNum);
+                }
+
+                $returningCount++;
+                $returningSum += $returning->payment_sum;
+                $returningDate = $timeController->reformatDateTime($returning->payment_time);
+
+
+                $formattedReturnings[] = [
+                    'payment_date' => $returningDate['formatted_date'],
+                    'payment_sum' => number_format($returning->payment_sum, 2, '.', ' '),
+                    'site' => $siteInfo->site_addr,
+                    'order_id' => $returning->order_id,
+                    'payment_id' => $returning->payment_order_id,
+                    'link' => $link
+                ];
+            }
         }
 
         return view(
@@ -65,7 +138,9 @@ class HomeController extends Controller
                 'link' => '/',
                 'payments' => $formattedPayment,
                 'today' => date('d.m.Y'),
-                'plot_data' => $plotData
+                'plot_data' => $plotData,
+                'payment_percent' => $paymentPercent,
+                'returnings' => $formattedReturnings
             ]
         );
     }

@@ -19,10 +19,24 @@
                             <span class="text-bold text-lg">{{$payments['payment_count']}}</span>
                             <span>Количество платежей</span>
                         </p>
-                        <p class="d-flex flex-column">
-                            <span class="text-bold text-lg">{{$payments['payment_sum']}} ₽</span>
-                            <span>Сумма платежей</span>
-                        </p>
+                        <div class="d-flex">
+                            <div class="pay-sum d-flex flex-column">
+                                <span class="text-bold text-lg">{{$payments['payment_sum']}} ₽</span>
+                                <span>Сумма платежей</span>
+                            </div>
+                            <div class="pay-index ml-3">
+                                @if($payment_percent > 0)
+                                    <span class="text-success">
+                                      <i class="fas fa-arrow-up"></i> {{$payment_percent}}%
+                                    </span>
+                                @else
+                                    <span class="text-danger">
+                                      <i class="fas fa-arrow-down"></i> {{$payment_percent}}%
+                                    </span>
+                                @endif
+
+                            </div>
+                        </div>
                     </div>
                     <!-- /.d-flex -->
 
@@ -50,7 +64,7 @@
                                 <th>Сайт</th>
                                 <th>Сумма</th>
                                 <th>Время</th>
-                                <th>Id заказа</th>
+                                <th>Ссылка на заказ</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,7 +74,13 @@
                                         <td>{{$item['site']}}</td>
                                         <td>{{$item['sum']}} ₽</td>
                                         <td>{{$item['date']}}</td>
-                                        <td>{{$item['order_id']}}</td>
+                                        <td>
+                                            @if($item['link'] != 'Пусто')
+                                                <a href="{{$item['link']}}">Ссылка</a>
+                                            @else
+                                                <p>Заказ beauty</p>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             @endif
@@ -76,26 +96,12 @@
             <div class="card">
                 <div class="card-header border-0">
                     <div class="d-flex justify-content-between">
-                        <h3 class="card-title">Возвраты за {{$today}}</h3>
-                        <a href="/returning">Полный список</a>
+                        <h3 class="card-title">Платежи за год</h3>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <p class="d-flex flex-column">
-                            <span class="text-bold text-lg">0</span>
-                            <span>Количество возвратов</span>
-                        </p>
-
-                        <p class="d-flex flex-column">
-                            <span class="text-bold text-lg">0</span>
-                            <span>Сумма платежей</span>
-                        </p>
-                    </div>
-                    <!-- /.d-flex -->
-
                     <div class="position-relative mb-4">
-                        <canvas id="returning-chart" height="200"></canvas>
+                        <canvas id="returning-chart" height="260"></canvas>
                     </div>
 
                     <div class="d-flex flex-row justify-content-end">
@@ -109,7 +115,7 @@
 
             <div class="card">
                 <div class="card-header border-0">
-                    <h3 class="card-title">Список возвратов</h3>
+                    <h3 class="card-title">Список возвратов за месяц</h3>
                 </div>
                 <div class="card-body table-responsive p-0">
                     <table class="table table-striped table-valign-middle">
@@ -122,9 +128,21 @@
                         </tr>
                         </thead>
                         <tbody>
-
+                            @if($returnings)
+                                @foreach($returnings as $returning)
+                                    <tr>
+                                        <td>{{$returning['site']}}</td>
+                                        <td>{{$returning['payment_sum']}}</td>
+                                        <td>{{$returning['payment_date']}}</td>
+                                        <td>{{$returning['order_id']}}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
+                    @if(!$returnings)
+                        <p class="mt-2 ml-4">К сожалению данных нет</p>
+                    @endif
                 </div>
             </div>
             <!-- /.card -->
