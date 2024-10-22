@@ -83,7 +83,7 @@ class HomeController extends Controller
 
         $paymentPercent = '0.0';
 
-        if($yesterdaySum > 0) {
+        if($paymentSum > 0) {
             $paymentPercent = (($paymentSum - $yesterdaySum) / $paymentSum) * 100;
             $paymentPercent = number_format($paymentPercent, 1, '.', ' ');
         }
