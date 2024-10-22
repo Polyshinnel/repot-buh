@@ -28,7 +28,7 @@ class HomeController extends Controller
         $selectDate = $date.' '.'00:00:00';
         $filter = [
             ['payment_time', '>=', $selectDate],
-            ['status_paymet', '=', 1]
+            ['status_payment', '=', 1]
         ];
         $payments = Payment::where($filter)->orderBy('payment_time', 'ASC')->get();
         $paymentCount = $payments->count();
