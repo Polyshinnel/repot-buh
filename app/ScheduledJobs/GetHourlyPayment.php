@@ -33,7 +33,7 @@ class GetHourlyPayment
                             if($item['status'] == 'succeeded') {
                                 $dateStr = $item['created_at'];
                                 $timeSec = strtotime($dateStr);
-                                $timeSec += 180*60;
+                                //$timeSec += 180*60;
                                 $date = date('Y-m-d H:i:s', $timeSec);
                                 if(isset($item['income_amount']['value'])) {
                                     $totalSum = (float)$item['amount']['value'];

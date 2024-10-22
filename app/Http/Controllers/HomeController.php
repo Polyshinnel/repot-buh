@@ -81,8 +81,18 @@ class HomeController extends Controller
             }
         }
 
-        $paymentPercent = (($paymentSum - $yesterdaySum) / $paymentSum) * 100;
-        $paymentPercent = number_format($paymentPercent, 1, '.', ' ');
+        $paymentPercent = '0.0';
+
+        if($yesterdaySum > 0) {
+            $paymentPercent = (($paymentSum - $yesterdaySum) / $paymentSum) * 100;
+            $paymentPercent = number_format($paymentPercent, 1, '.', ' ');
+        }
+
+        if($yesterdaySum == 0 && $paymentSum > 0) {
+            $paymentPercent = '100.0';
+        }
+
+
 
         $formattedPayment['payment_count'] = $paymentCount;
         $formattedPayment['payment_sum'] = $paymentSum;
