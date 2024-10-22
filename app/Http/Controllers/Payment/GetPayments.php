@@ -16,7 +16,7 @@ class GetPayments extends Controller
             foreach ($settings as $setting) {
                 $shopId = $setting->shop_id;
                 $apiKey = $setting->api_key;
-                $baseLink = 'https://api.yookassa.ru/v3/payments?limit=100&created_at.gte=2024-10-22T00:00:00.139Z';
+                $baseLink = 'https://api.yookassa.ru/v3/payments?limit=100&created_at.gte=2024-10-01T00:00:00.139Z';
                 $link = $baseLink;
 
 

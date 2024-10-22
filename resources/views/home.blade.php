@@ -96,17 +96,17 @@
             <div class="card">
                 <div class="card-header border-0">
                     <div class="d-flex justify-content-between">
-                        <h3 class="card-title">Платежи за год</h3>
+                        <h3 class="card-title">Платежи месяц по сайтам</h3>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="position-relative mb-4">
-                        <canvas id="returning-chart" height="260"></canvas>
+                        <canvas id="payment-site" height="260"></canvas>
                     </div>
 
                     <div class="d-flex flex-row justify-content-end">
                       <span class="mr-2">
-                        <i class="fas fa-square text-primary"></i> Возвраты
+                        <i class="fas fa-square text-primary"></i> Сумма
                       </span>
                     </div>
                 </div>
@@ -165,13 +165,26 @@
         </ul>
     @endif
 
+    @if($siteColumnPlot)
+        <ul id="site_axis" class="d-none">
+            @foreach($siteColumnPlot['sites'] as $site)
+                <li>{{$site}}</li>
+            @endforeach
+        </ul>
+        <ul id="site_sum" class="d-none">
+            @foreach($siteColumnPlot['sum'] as $sum)
+                <li>{{$sum}}</li>
+            @endforeach
+        </ul>
+    @endif
 
     <script src="/assets/plugins/chart.js/Chart.min.js"></script>
     <script>
-        function getPaymentAxis() {
+        function getPaymentAxis(selector) {
             let axisArr = [];
-            if($('#payment_axis').length > 0) {
-                $('#payment_axis li').each(function () {
+            let list = $(selector)
+            if(list.length > 0) {
+                list.find('li').each(function () {
                     axisArr.push($(this).html())
                 })
             }
@@ -179,11 +192,12 @@
             return axisArr;
         }
 
-        function getPaymentData() {
+        function getPaymentData(selector) {
             let dataArr = [];
-            if($('#payment_value').length > 0) {
-                $('#payment_value li').each(function () {
-                    dataArr.push(parseFloat($(this).html()))
+            let list = $(selector)
+            if(list.length > 0) {
+                list.find('li').each(function () {
+                    dataArr.push($(this).html())
                 })
             }
 
@@ -201,8 +215,8 @@
             }
 
 
-            let paymentLabels = getPaymentAxis();
-            let paymentData = getPaymentData();
+            let paymentLabels = getPaymentAxis('#payment_axis');
+            let paymentData = getPaymentData('#payment_value');
             console.log(paymentLabels)
             console.log(paymentData)
             let dataList = {
@@ -250,6 +264,59 @@
                                 beginAtZero: true,
                                 suggestedMax: 200
                             }, ticksStyle)
+                        }],
+                        xAxes: [{
+                            display: true,
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: ticksStyle
+                        }]
+                    }
+                }
+            })
+
+
+
+            let sitLabels = getPaymentAxis('#site_axis');
+            let siteData = getPaymentData('#site_sum');
+
+
+            let $paymentSitesChart = $('#payment-site');
+            let salesChart = new Chart($paymentSitesChart, {
+                type: 'bar',
+                data: {
+                    labels: sitLabels,
+                    datasets: [
+                        {
+                            backgroundColor: '#007bff',
+                            borderColor: '#007bff',
+                            data: siteData
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    hover: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            // display: false,
+                            gridLines: {
+                                display: true,
+                                lineWidth: '4px',
+                                color: 'rgba(0, 0, 0, .2)',
+                                zeroLineColor: 'transparent'
+                            },
                         }],
                         xAxes: [{
                             display: true,

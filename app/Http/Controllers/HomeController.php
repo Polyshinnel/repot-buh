@@ -142,6 +142,8 @@ class HomeController extends Controller
             }
         }
 
+        $siteColumnPlot = $this->getPlotColumnData();
+
         return view(
             'home',
             [
@@ -154,7 +156,8 @@ class HomeController extends Controller
                 'today' => date('d.m.Y'),
                 'plot_data' => $plotData,
                 'payment_percent' => $paymentPercent,
-                'returnings' => $formattedReturnings
+                'returnings' => $formattedReturnings,
+                'siteColumnPlot' => $siteColumnPlot,
             ]
         );
     }
@@ -167,16 +170,66 @@ class HomeController extends Controller
         $sitesPayment = [];
         $axisPayment = [];
         $timeController = new TimeController();
+        $payments = array_reverse($payments);
 
         foreach ($payments as $payment) {
             $dateArr = explode(' ', $payment['date']);
             $axisPayment[] = $dateArr[1];
-            $sitesPayment[] = $payment['sum'];
+            $sitesPayment[] = str_replace(' ', '', $payment['sum']);
         }
 
         return [
             'data_payment' => $sitesPayment,
             'data_axis' => $axisPayment
         ];
+    }
+
+    /**
+     * @return array{sites: array, sum: array}
+     */
+    private function getPlotColumnData(): array
+    {
+        $dateStart = sprintf('%s-01 00:00:00', date('Y-m'));
+        $dateEnd = sprintf('%s 23:59:59', date('Y-m-t'));
+
+        $payments = Payment::where(['status_payment' => 1])
+            ->whereBetween('payment_time', [$dateStart, $dateEnd])
+            ->orderBy('payment_time', 'DESC')
+            ->get();
+
+        $siteSumInfo = [];
+        $resultArr = [
+            'sites' => [],
+            'sum' => []
+        ];
+
+        if(!$payments->isEmpty()) {
+            foreach ($payments as $payment) {
+                $siteInfo = $payment->site_info;
+                $siteName = $siteInfo->site_addr;
+                $paymentSum = $payment->payment_sum;
+
+                $siteNameArr = explode('//', $siteName);
+                $siteName = substr($siteNameArr[1], 0,  - 1);
+
+                if(isset($siteSumInfo[$siteName])) {
+                    $siteSumInfo[$siteName] += (float)$paymentSum;
+                } else {
+                    $siteSumInfo[$siteName] = (float)$paymentSum;
+                }
+
+            }
+        }
+
+
+
+        if(!empty($siteSumInfo)) {
+            foreach ($siteSumInfo as $siteName => $siteSum) {
+                $resultArr['sites'][] = $siteName;
+                $resultArr['sum'][] = $siteSum;
+            }
+        }
+
+        return $resultArr;
     }
 }
