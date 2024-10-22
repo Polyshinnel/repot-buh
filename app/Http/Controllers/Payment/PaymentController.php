@@ -40,7 +40,8 @@ class PaymentController extends Controller
             $date = date('Y-m-d');
             $selectDate = $date.' '.'00:00:00';
             $filter = [
-                ['payment_time', '>=', $selectDate]
+                ['payment_time', '>=', $selectDate],
+                ['status_payment', '=', 1]
             ];
             $payments = Payment::where($filter)->orderBy('payment_time', 'DESC')->get();
             $blockTitle = 'Платежи за сегодня';
@@ -56,7 +57,7 @@ class PaymentController extends Controller
             $yesterdayDateStart = sprintf('%s 00:00:00', $yesterdayDate);
             $yesterdayDateEnd = sprintf('%s 23:59:59', $yesterdayDate);
 
-            $payments = Payment::whereBetween('payment_time', [$yesterdayDateStart, $yesterdayDateEnd])->orderBy('payment_time', 'DESC')->get();
+            $payments = Payment::where(['status_payment' => 1])->whereBetween('payment_time', [$yesterdayDateStart, $yesterdayDateEnd])->orderBy('payment_time', 'DESC')->get();
             $blockTitle = 'Платежи за вчера';
         }
 
@@ -80,7 +81,8 @@ class PaymentController extends Controller
             //Если пуста дата начала
             if($dateStart == '' && $dateEnd != '') {
                 $filter = [
-                    ['payment_time', '<=', $dateEnd]
+                    ['payment_time', '<=', $dateEnd],
+                    ['status_payment', '=', 1]
                 ];
                 $payments = Payment::where($filter)->orderBy('payment_time', 'DESC')->get();
                 $blockTitle .= 'по '. $dateEnd;
@@ -89,7 +91,8 @@ class PaymentController extends Controller
             //Если пуста дата конца
             if($dateStart != '' && $dateEnd == '') {
                 $filter = [
-                    ['payment_time', '>=', $dateStart]
+                    ['payment_time', '>=', $dateStart],
+                    ['status_payment', '=', 1]
                 ];
                 $payments = Payment::where($filter)->orderBy('payment_time', 'DESC')->get();
                 $blockTitle .= 'c '. $dateStart;
@@ -97,7 +100,7 @@ class PaymentController extends Controller
 
             //Если получен интервал
             if($dateStart != '' && $dateEnd != '') {
-                $payments = Payment::whereBetween('payment_time', [$dateStart, $dateEnd])->orderBy('payment_time', 'DESC')->get();
+                $payments = Payment::where(['status_payment' => 1])->whereBetween('payment_time', [$dateStart, $dateEnd])->orderBy('payment_time', 'DESC')->get();
                 $blockTitle .= 'c '. $dateStart.' по '.$dateEnd;
             }
         }
@@ -107,7 +110,7 @@ class PaymentController extends Controller
             $dateStart = sprintf('%s-01 00:00:00', date('Y-m'));
             $dateEnd = sprintf('%s 23:59:59', date('Y-m-t'));
 
-            $payments = Payment::whereBetween('payment_time', [$dateStart, $dateEnd])->orderBy('payment_time', 'DESC')->get();
+            $payments = Payment::where(['status_payment' => 1])->whereBetween('payment_time', [$dateStart, $dateEnd])->orderBy('payment_time', 'DESC')->get();
             $blockTitle = sprintf('Платежи с 01.%s по %s', date('m.Y'), date('t.m.Y'));
         }
 

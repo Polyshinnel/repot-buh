@@ -33,7 +33,7 @@ class GetHourlyReturning
 
                             $dateStr = $item['created_at'];
                             $timeSec = strtotime($dateStr);
-                            $timeSec += 180*60;
+                            //$timeSec += 180*60;
                             $date = date('Y-m-d H:i:s', $timeSec);
 
                             if(isset($item['payment_id'])) {
@@ -41,6 +41,7 @@ class GetHourlyReturning
                                 $payment = Payment::where(['payment_order_id' => $paymentId])->first();
 
                                 if($payment) {
+                                    $payment->update(['status_payment' => 2]);
                                     $normalizePayments[] = [
                                         'site_id' => $setting->site_id,
                                         'payment_sum' => $item['amount']['value'],

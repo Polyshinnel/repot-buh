@@ -27,7 +27,8 @@ class HomeController extends Controller
         $date = date('Y-m-d');
         $selectDate = $date.' '.'00:00:00';
         $filter = [
-            ['payment_time', '>=', $selectDate]
+            ['payment_time', '>=', $selectDate],
+            ['status_paymet', '=', 1]
         ];
         $payments = Payment::where($filter)->orderBy('payment_time', 'ASC')->get();
         $paymentCount = $payments->count();
@@ -40,7 +41,7 @@ class HomeController extends Controller
         $yesterdayDateStart = sprintf('%s 00:00:00', $yesterdayDate);
         $yesterdayDateEnd = sprintf('%s 23:59:59', $yesterdayDate);
 
-        $yesterday_payments = Payment::whereBetween('payment_time', [$yesterdayDateStart, $yesterdayDateEnd])->orderBy('payment_time', 'DESC')->get();
+        $yesterday_payments = Payment::where(['status_payment' => 1])->whereBetween('payment_time', [$yesterdayDateStart, $yesterdayDateEnd])->orderBy('payment_time', 'DESC')->get();
 
         $formattedPayment = [];
         $formattedPayment['items'] = [];

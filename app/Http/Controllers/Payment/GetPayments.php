@@ -16,7 +16,7 @@ class GetPayments extends Controller
             foreach ($settings as $setting) {
                 $shopId = $setting->shop_id;
                 $apiKey = $setting->api_key;
-                $baseLink = 'https://api.yookassa.ru/v3/payments?limit=100&created_at.gte=2024-09-01T00:00:00.139Z';
+                $baseLink = 'https://api.yookassa.ru/v3/payments?limit=100&created_at.gte=2024-10-22T00:00:00.139Z';
                 $link = $baseLink;
 
 
@@ -79,11 +79,17 @@ class GetPayments extends Controller
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $link);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_USERPWD, "$shopId:$apiKey");
-
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
         $response = curl_exec($ch);
+        curl_close($ch);
+        $error_msg = '';
+        if (curl_errno($ch)) {
+            $error_msg = curl_error($ch);
+        }
         return json_decode($response, true);
     }
 }
