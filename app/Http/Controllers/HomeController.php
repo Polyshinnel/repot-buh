@@ -30,7 +30,7 @@ class HomeController extends Controller
             ['payment_time', '>=', $selectDate],
             ['status_payment', '=', 1]
         ];
-        $payments = Payment::where($filter)->orderBy('payment_time', 'ASC')->get();
+        $payments = Payment::where($filter)->orderBy('payment_time', 'DESC')->get();
         $paymentCount = $payments->count();
         $paymentSum = 0;
 
