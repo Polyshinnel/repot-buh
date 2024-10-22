@@ -14,7 +14,7 @@ class GetHourlyReturning
         if(!$settings->isEmpty()) {
             $limit = 100;
             $baseLink = sprintf(
-                'https://api.yookassa.ru/v3/payments?limit=100&created_at.gte=%sT00:00:00.000Z',
+                'https://api.yookassa.ru/v3/refunds?limit=100&created_at.gte=%sT00:00:00.000Z',
                 date('Y-m-d')
             );
 
@@ -79,6 +79,7 @@ class GetHourlyReturning
     private function getTodayReturning($shopId, $apiKey, $link): array {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $link);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);

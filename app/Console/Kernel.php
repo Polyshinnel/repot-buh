@@ -19,9 +19,13 @@ class Kernel extends ConsoleKernel
         $schedule->call(new GetHourlyPayment)
             ->everyThirtyMinutes()
             ->before(function () {
-                Log::info('Задача началась');
+                Log::info('Старт работы GetHourlyPayment');
             });
-        $schedule->call(new GetHourlyReturning)->everyTwoHours();
+        $schedule->call(new GetHourlyReturning)
+            ->everyTwoHours()
+            ->before(function () {
+                Log::info('Старт работы GetHourlyReturning');
+            });;
     }
 
     /**

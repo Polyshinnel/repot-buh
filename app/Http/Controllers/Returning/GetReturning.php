@@ -17,7 +17,7 @@ class GetReturning extends Controller
             foreach ($settings as $setting) {
                 $shopId = $setting->shop_id;
                 $apiKey = $setting->api_key;
-                $baseLink = 'https://api.yookassa.ru/v3/refunds?limit=100&created_at.gte=2024-09-01T00:00:00.139Z';
+                $baseLink = 'https://api.yookassa.ru/v3/refunds?limit=100&created_at.gte=2024-10-22T00:00:00.139Z';
                 $link = $baseLink;
 
 
@@ -38,6 +38,7 @@ class GetReturning extends Controller
                             $payment = Payment::where(['payment_order_id' => $paymentId])->first();
 
                             if($payment) {
+                                $payment->update(['status_payment' => 2]);
                                 $normalizePayments[] = [
                                     'site_id' => $setting->site_id,
                                     'payment_sum' => $item['amount']['value'],
@@ -76,6 +77,7 @@ class GetReturning extends Controller
     private function getTodayReturning($shopId, $apiKey, $link): array {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $link);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
