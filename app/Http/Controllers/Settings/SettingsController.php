@@ -36,7 +36,9 @@ class SettingsController extends Controller
                     'site_addr' => $siteInfo->site_addr,
                     'payment' => $payment->payment_name,
                     'shop_id' => $setting->shop_id,
-                    'api_key' => $setting->api_key
+                    'api_key' => $setting->api_key,
+                    'database' => $settings->database,
+                    'prefix' => $settings->prefix
                 ];
             }
         }

@@ -36,6 +36,8 @@
                             <th>Платежная система</th>
                             <th>Id магазина</th>
                             <th>Api ключ</th>
+                            <th>Имя бд</th>
+                            <th>Префикс</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -47,6 +49,8 @@
                                         <td>{{$setting['payment']}}</td>
                                         <td>{{$setting['shop_id']}}</td>
                                         <td>{{$setting['api_key']}}</td>
+                                        <td>{{$setting['database']}}</td>
+                                        <td>{{$setting['prefix']}}</td>
                                     </tr>
                                 @endforeach
                             @endif
