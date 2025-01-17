@@ -17,7 +17,9 @@ class StoreSettingsController extends Controller
             'site_id' => $data['site_id'],
             'payment_id' => $data['payment_id'],
             'shop_id' => $data['shop_id'],
-            'api_key' => $data['api_key']
+            'api_key' => $data['api_key'],
+            'database' => $data['database_name'],
+            'prefix' => $data['order_prefix'],
         ];
         try{
             DB::beginTransaction();

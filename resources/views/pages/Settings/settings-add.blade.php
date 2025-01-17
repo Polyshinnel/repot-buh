@@ -39,6 +39,14 @@
                             <label for="api_key">Api Key</label>
                             <input type="text" class="form-control" id="api_key" name="api_key" placeholder="Api Key">
                         </div>
+                        <div class="form-group">
+                            <label for="database_name">Database</label>
+                            <input type="text" class="form-control" id="database_name" name="database_name" placeholder="Paolareinas">
+                        </div>
+                        <div class="form-group">
+                            <label for="order_prefix">Prefix</label>
+                            <input type="text" class="form-control" id="order_prefix" name="order_prefix" placeholder="pr">
+                        </div>
                     </div>
                     <!-- /.card-body -->
 
