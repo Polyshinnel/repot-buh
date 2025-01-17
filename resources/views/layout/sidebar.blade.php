@@ -47,6 +47,15 @@
                 </li>
 
                 <li class="nav-item">
+                    <a href="/reciept" class="nav-link">
+                        <i class="nav-icon fas fa-receipt"></i>
+                        <p>
+                            Чеки
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     <a href="/settings" class="nav-link">
                         <i class="nav-icon fas fa-cog"></i>
                         <p>
