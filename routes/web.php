@@ -39,4 +39,8 @@ Route::middleware([LoggedUser::class])->group(function () {
 
     Route::get('/payments/today-list', GetPayments::class);
     Route::get('/returning/today-list', GetReturning::class);
+
+    Route::get('/reciept', function (){
+        return view('pages.Reciept.reciept');
+    });
 });
