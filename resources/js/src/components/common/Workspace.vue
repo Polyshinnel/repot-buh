@@ -81,6 +81,8 @@ import Sidebar from "@/components/common/Sidebar.vue";
     background: #fff;
     margin-top: 20px;
     border-radius: 5px;
+    height: 670px;
+    overflow: auto;
 
     .workspace-area__title{
         height: 46px;
