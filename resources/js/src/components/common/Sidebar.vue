@@ -35,7 +35,7 @@ import {faCog, faCreditCard, faReceipt, faRetweet, faTachometerAlt} from '@forta
             </a>
         </li>
 
-        <li>
+        <li class="active">
             <a href="/reciept">
                 <div class="sidebar-menu-item">
                     <font-awesome-icon :icon="faReceipt" />
@@ -61,5 +61,71 @@ import {faCog, faCreditCard, faReceipt, faRetweet, faTachometerAlt} from '@forta
     background: #343a40;
     width: 250px;
     height: 100vh;
+}
+
+.sidebar-title{
+    height: 57px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    border-bottom: 1px solid #4f5962;
+    color: #d1d2d3;
+}
+
+.sidebar-name{
+    height: 57px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    border-bottom: 1px solid #4f5962;
+    color: #d1d2d3;
+}
+
+.sidebar-menu{
+    margin-top: 15px;
+    padding: 0 10px;
+    li{
+        height: 40px;
+        display: flex;
+        align-items: center;
+        padding: 3px 15px;
+        border-radius: 3px;
+        cursor: pointer;
+
+        a{
+            color: #c2c7d0;
+            text-decoration: none;
+        }
+
+        &:hover{
+            background: #494e53;
+            a{
+                color: #fff;
+            }
+        }
+    }
+
+    .active{
+        background: #0c84ff;
+
+        a{
+            color: #fff;
+        }
+
+        &:hover{
+            background: #0c84ff;
+            a{
+                color: #fff;
+            }
+        }
+    }
+
+
+}
+
+.sidebar-menu-item{
+    span{
+        margin-left: 10px;
+    }
 }
 </style>

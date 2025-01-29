@@ -4,7 +4,9 @@ import Workspace from "@/components/common/Workspace.vue";
 </script>
 
 <template>
-<Workspace />
+    <Workspace>
+
+    </Workspace>
 </template>
 
 <style scoped>
