@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('refunded');
             $table->text('request');
             $table->text('response');
-            $table->integer('status');
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }
