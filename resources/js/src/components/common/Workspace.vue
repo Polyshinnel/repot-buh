@@ -3,6 +3,10 @@
 import Header from "@/components/common/Header.vue";
 import Footer from "@/components/common/Footer.vue";
 import Sidebar from "@/components/common/Sidebar.vue";
+
+defineProps({
+    title: String
+})
 </script>
 
 <template>
@@ -22,7 +26,7 @@ import Sidebar from "@/components/common/Sidebar.vue";
 
                 <div class="workspace-area">
                     <div class="workspace-area__title">
-                        <h2>Работа с чеками</h2>
+                        <h2>{{title}}</h2>
                     </div>
 
                     <div class="workspace-area__body">

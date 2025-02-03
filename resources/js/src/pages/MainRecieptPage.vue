@@ -9,7 +9,10 @@ import {Plus, Search} from "@element-plus/icons-vue";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import LoadingBtn from "@/components/common/LoadingBtn.vue";
+import axios from "axios";
+import {useRouter} from "vue-router";
 
+const router = useRouter();
 const reciepts = ref([]);
 const loading = ref(false)
 const searchOrder = ref('')
@@ -29,7 +32,15 @@ const getReciepts = async () => {
 
 const handleSearch = async () => {
     loadingOrder.value = true
-    console.log(searchOrder.value)
+    try {
+        const {data} = await axios.post('/api/simpla-search', {order: searchOrder.value})
+        const id = data.data
+        Fancybox.close();
+        const url = `/reciept/${id}`
+        await router.push(url)
+    } catch (e) {
+        console.log(e.response.data)
+    }
 }
 
 const getSearchDialog = () => {
@@ -43,7 +54,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <Workspace>
+    <Workspace title="Работа с чеками">
         <div class="filter-list">
             <el-input
                 v-model="search"
@@ -55,7 +66,7 @@ onMounted(() => {
             <el-button type="primary" :icon="Plus" @click="getSearchDialog">Новый чек</el-button>
         </div>
         <Loading v-if="loading" />
-        <RecieptListTable v-if="reciepts.length > 0 && !loading" :reciepts="reciepts" />
+        <RecieptListTable v-if="reciepts.length > 0 && !loading" :reciepts="reciepts" class="reciept-table-block"/>
         <Empty v-if="!loading && reciepts.length < 1" />
     </Workspace>
 
@@ -107,5 +118,9 @@ onMounted(() => {
 
 .search-loading{
     width: 100px;
+}
+
+.reciept-table-block{
+    margin-top: 20px;
 }
 </style>

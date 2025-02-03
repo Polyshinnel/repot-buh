@@ -1,10 +1,11 @@
 <script setup>
-
-import RecieptListTable from "@/components/reciept/RecieptListTable.vue";
+import Workspace from "../components/common/Workspace.vue";
 </script>
 
 <template>
+    <Workspace title="Чек">
 
+    </Workspace>
 </template>
 
 <style scoped>

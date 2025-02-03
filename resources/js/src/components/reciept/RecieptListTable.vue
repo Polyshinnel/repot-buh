@@ -21,7 +21,8 @@ const props = defineProps({
 
 <template>
     <div class="table-block">
-        <el-table :data="props.reciepts" style="width: 100%">
+        <el-table :data="props.reciepts" height="530" style="width:100%;">
+
             <el-table-column fixed prop="id" label="ID" width="50"/>
             <el-table-column fixed prop="name" label="Заказ" width="100">
                 <template #default="scope">
@@ -29,19 +30,19 @@ const props = defineProps({
                 </template>
             </el-table-column>
             <el-table-column fixed prop="customer" label="ФИО" width="200"/>
-            <el-table-column fixed prop="email" label="Email" width="200"/>
-            <el-table-column fixed prop="phone" label="Телефон"/>
-            <el-table-column fixed prop="amount" label="Сумма чека"/>
-            <el-table-column fixed prop="refunded" label="Сумма возврата"/>
-            <el-table-column fixed prop="status" label="Статус" width="100">
+            <el-table-column fixed prop="email" label="Email" width="220"/>
+            <el-table-column fixed prop="phone" label="Телефон" width="220"/>
+            <el-table-column fixed prop="amount" label="Сумма чека" width="150"/>
+            <el-table-column fixed prop="refunded" label="Сумма возврата" width="150"/>
+            <el-table-column fixed prop="status" label="Статус" width="120">
                 <template #default="scope">
                     <el-tag type="success" v-if="scope.row.status == 1">Отправлен</el-tag>
                     <el-tag type="info" v-if="scope.row.status == 2">Отправляется</el-tag>
                     <el-tag type="warning" v-if="scope.row.status == 0">Не отправлен</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column fixed prop="updated_at" label="Дата создания"/>
-            <el-table-column label="Операции" min-width="150">
+            <el-table-column fixed prop="updated_at" label="Дата создания" width="170"/>
+            <el-table-column label="Операции" width="200" fixed>
                 <template #default="scope">
                     <el-button type="primary" size="small" @click="handleClick(scope.row.id)">
                         Открыть
@@ -54,8 +55,7 @@ const props = defineProps({
 </template>
 
 <style scoped>
-.table-block {
+.table-block{
     width: 100%;
-    height: 100%;
 }
 </style>

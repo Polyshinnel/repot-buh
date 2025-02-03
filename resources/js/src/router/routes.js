@@ -8,7 +8,7 @@ const routes = [
         component: MainRecieptPage
     },
     {
-        path: '/reciept/1',
+        path: '/reciept/:id',
         name: 'reciept-item',
         component: RecieptItem
     },
