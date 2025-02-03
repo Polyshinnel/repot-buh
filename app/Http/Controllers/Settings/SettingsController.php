@@ -37,8 +37,8 @@ class SettingsController extends Controller
                     'payment' => $payment->payment_name,
                     'shop_id' => $setting->shop_id,
                     'api_key' => $setting->api_key,
-                    'database' => $settings->database,
-                    'prefix' => $settings->prefix
+                    'database' => $setting->database,
+                    'prefix' => $setting->prefix
                 ];
             }
         }
